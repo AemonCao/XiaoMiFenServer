@@ -1,4 +1,4 @@
-package me.aemon;
+package me.aemon.Helper;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.crypto.Data;

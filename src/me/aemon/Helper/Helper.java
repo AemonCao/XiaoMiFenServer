@@ -17,12 +17,6 @@ import java.util.Date;
  * @描述
  */
 public class Helper {
-    public static ArrayList<String> GetFiles(String path) {
-        ArrayList<String> files = new ArrayList<String>();
-        File file = new File(path);
-        File[] tempList = file.listFiles();
-        return files;
-    }
 
     public static Long getTimestamp() {
         return System.currentTimeMillis();
@@ -70,8 +64,7 @@ public class Helper {
 
         // 指定写图片的方式为 jpg
         imgWrier = ImageIO.getImageWritersByFormatName("jpg").next();
-        imgWriteParams = new javax.imageio.plugins.jpeg.JPEGImageWriteParam(
-                null);
+        imgWriteParams = new javax.imageio.plugins.jpeg.JPEGImageWriteParam(null);
         // 要使用压缩，必须指定压缩方式为MODE_EXPLICIT
         imgWriteParams.setCompressionMode(imgWriteParams.MODE_EXPLICIT);
         // 这里指定压缩的程度，参数qality是取值0~1范围内，
@@ -79,8 +72,8 @@ public class Helper {
         imgWriteParams.setProgressiveMode(imgWriteParams.MODE_DISABLED);
         ColorModel colorModel = ImageIO.read(new File(srcFilePath)).getColorModel();// ColorModel.getRGBdefault();
         // 指定压缩时使用的色彩模式
-//        imgWriteParams.setDestinationType(new javax.imageio.ImageTypeSpecifier(
-//                colorModel, colorModel.createCompatibleSampleModel(16, 16)));
+        // imgWriteParams.setDestinationType(new javax.imageio.ImageTypeSpecifier(
+        // colorModel, colorModel.createCompatibleSampleModel(16, 16)));
         imgWriteParams.setDestinationType(new javax.imageio.ImageTypeSpecifier(
                 colorModel, colorModel.createCompatibleSampleModel(16, 16)));
 

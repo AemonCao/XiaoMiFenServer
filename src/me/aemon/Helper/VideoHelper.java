@@ -26,6 +26,7 @@ public class VideoHelper {
         recorder.setFormat("flv");
         // 每秒多少帧
         recorder.setFrameRate(24);
+        // 越大画质越好（当然前提是原图的画质要有所保证）
         recorder.setVideoBitrate(8000000);
         recorder.setPixelFormat(0);
         recorder.start();
@@ -33,10 +34,12 @@ public class VideoHelper {
         for (int i = 0; i < files.length; i++) {
             String fileName = files[i].toString();
             System.out.println(fileName + "\t" + i + "/" + files.length);
-            IplImage image = cvLoadImage(fileName); // 非常吃内存！！
+            IplImage image = cvLoadImage(fileName);
+            // 非常吃内存！！
             recorder.record(converter.convert(image));
             // 释放内存？
-            // cvLoadImage(fileName); // 非常吃内存！！
+            // cvLoadImage(fileName);
+            // 非常吃内存！！
             opencv_core.cvReleaseImage(image);
         }
         recorder.stop();

@@ -26,12 +26,10 @@ public class DBHelper {
             // 注册 JDBC 驱动
             Class.forName(JDBC_DRIVER);
 
-            // 打开链接
-            System.out.println("连接数据库...");
+            // 打开链接 连接数据库
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-            // 执行查询
-            System.out.println("实例化Statement对象...");
+            // 执行查询 实例化Statement对象
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(strSql);
             ResultSetMetaData md = rs.getMetaData(); //获得结果集结构信息,元数据
@@ -76,14 +74,11 @@ public class DBHelper {
             // 注册 JDBC 驱动
             Class.forName(JDBC_DRIVER);
 
-            // 打开链接
-//            System.out.println("连接数据库...");
+            // 打开链接 连接数据库
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-            // 执行查询
-            System.out.println("实例化Statement对象...");
+            // 执行查询 实例化Statement对象
             stmt = conn.createStatement();
-            String sql = "SELECT photo_tb.photo_id, photo_tb.photo_name FROM photo_tb WHERE photo_tb.photo_id = 1";
             count = stmt.executeUpdate(strSql);
             stmt.close();
             conn.close();

@@ -3,7 +3,6 @@ package me.aemon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -52,8 +51,8 @@ public class Main {
         System.out.println("请输入你要操作的功能序号，并以回车结束：");
         System.out.println("1.定时拍摄照片；");
         System.out.println("2.合成视频。");
-        char i = (char) System.in.read();
-        if (i == '1') {
+        char input = (char) System.in.read();
+        if (input == '1') {
             //samba服务器上的文件
             UniAddress ua = UniAddress.getByName(host);
             NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(host, username, password);
@@ -164,17 +163,17 @@ public class Main {
                     .newSingleThreadScheduledExecutor();
             service.scheduleAtFixedRate(runnable, 1, UploadInterval, TimeUnit.SECONDS);
 
-        } else if (i == '2') {
+        } else if (input == '2') {
             String imgPath = "D:\\XiaoMiFen\\2018\\12\\aa";
             File file = new File(imgPath);
             File[] files = file.listFiles();
-            for (int j = 0; j < files.length; j++) {
-                if (files[j].isDirectory()) {
-                    System.out.println(files[j]);
-                    VideoHelper.CompositeVideo(files[j].toString());
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    System.out.println(files[i]);
+                    VideoHelper.CompositeVideo(files[i].toString());
                 }
             }
-           // VideoHelper.CompositeVideo(imgPath + "\\07");
+            // VideoHelper.CompositeVideo(imgPath + "\\07");
         }
 
     }
