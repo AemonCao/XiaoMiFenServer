@@ -17,7 +17,6 @@ import java.util.Date;
  * @描述
  */
 public class Helper {
-
     public static Long getTimestamp() {
         return System.currentTimeMillis();
     }

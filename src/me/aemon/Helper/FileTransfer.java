@@ -13,15 +13,6 @@ import java.net.UnknownHostException;
  * @描述
  */
 public class FileTransfer {
-    // samba 地址
-    public static String host = "192.168.1.20";
-
-    // samba 登录名
-    public static String username = "root";
-
-    // samba 密码
-    public static String password = "cao19960528";
-
     private FileTransfer() {
     }
 

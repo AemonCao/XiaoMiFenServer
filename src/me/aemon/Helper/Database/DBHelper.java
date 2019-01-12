@@ -1,4 +1,6 @@
-package me.aemon.Helper;
+package me.aemon.Helper.Database;
+
+import me.aemon.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,22 +14,16 @@ import java.util.Map;
  * @描述
  */
 public class DBHelper {
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://192.168.1.100:3306/XiaoMiFen";
-
-    static final String USER = "root";
-    static final String PASS = "cao19960528";
-
     public static List<Map<String, Object>> queryAll(String strSql) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Connection conn = null;
         Statement stmt = null;
         try {
             // 注册 JDBC 驱动
-            Class.forName(JDBC_DRIVER);
+            Class.forName(Constants.JDBC_DRIVER);
 
             // 打开链接 连接数据库
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            conn = DriverManager.getConnection(Constants.DB_URL, Constants.DB_USERNAME, Constants.DB_PASSWORD);
 
             // 执行查询 实例化Statement对象
             stmt = conn.createStatement();
@@ -66,16 +62,15 @@ public class DBHelper {
     }
 
     public static int uploadSql(String strSql) {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Connection conn = null;
         Statement stmt = null;
         int count = 0;
         try {
             // 注册 JDBC 驱动
-            Class.forName(JDBC_DRIVER);
+            Class.forName(Constants.JDBC_DRIVER);
 
             // 打开链接 连接数据库
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            conn = DriverManager.getConnection(Constants.DB_URL, Constants.DB_USERNAME, Constants.DB_PASSWORD);
 
             // 执行查询 实例化Statement对象
             stmt = conn.createStatement();

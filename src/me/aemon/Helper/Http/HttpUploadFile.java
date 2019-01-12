@@ -1,7 +1,8 @@
-package me.aemon.Helper;
+package me.aemon.Helper.Http;
+
+import me.aemon.Constants;
 
 import javax.activation.MimetypesFileTypeMap;
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -15,8 +16,6 @@ import java.util.Map;
  * @描述 用于模拟 FormUpload 上传
  */
 public class HttpUploadFile {
-    private static String uploadUrl = "https://sm.ms/api/upload";
-
     public static String formUpload(String imgPath) {
         Map<String, String> fileMap = new HashMap<String, String>();
         fileMap.put("smfile", imgPath);
@@ -24,7 +23,7 @@ public class HttpUploadFile {
     }
 
     public static String formUpload(Map<String, String> fileMap) {
-        return formUpload(uploadUrl, new HashMap<String, String>(), fileMap);
+        return formUpload(Constants.SMMS_UPLOAD_URL, new HashMap<String, String>(), fileMap);
     }
 
     public static String formUpload(String urlStr, Map<String, String> textMap, Map<String, String> fileMap) {
@@ -100,7 +99,7 @@ public class HttpUploadFile {
                     DataInputStream in = new DataInputStream(
                             new FileInputStream(file)
                     );
-                    int bytes = 0;
+                    int bytes;
                     byte[] bufferOut = new byte[1024];
                     while ((bytes = in.read(bufferOut)) != -1)
                         out.write(bufferOut, 0, bytes);
@@ -114,7 +113,7 @@ public class HttpUploadFile {
             StringBuffer strBuf = new StringBuffer();
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     conn.getInputStream()));
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null)
                 strBuf.append(line).append("\n");
             res = strBuf.toString();

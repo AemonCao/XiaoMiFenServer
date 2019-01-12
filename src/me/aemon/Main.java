@@ -3,59 +3,32 @@ package me.aemon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.*;
-import java.net.UnknownHostException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import jcifs.UniAddress;
 import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbException;
 import jcifs.smb.SmbSession;
 import me.aemon.Helper.*;
 
 import com.alibaba.fastjson.*;
+import me.aemon.Helper.Database.DBHelper;
+import me.aemon.Helper.Http.HttpHelper;
+import me.aemon.Helper.Http.HttpUploadFile;
 
 import javax.imageio.ImageIO;
 
 public class Main {
-    // 是否上传到 sm.ms
-    public static boolean IsUpload = false;
-
-    // 是否备份到 samba
-    public static boolean IsBackup = true;
-
-    // 每小时上传次数
-    public static int HourlyUploads = 180;
-
-    // 上传间隔(单位：秒)
-    public static int UploadInterval = 3600 / HourlyUploads;
-
-    // 拍摄延时（单位：毫秒）
-    public static int ShootingDelay = 2500;
-
-    // samba 地址
-    public static String host = "192.168.1.20";
-
-    // samba 登录名
-    public static String username = "root";
-
-    // samba 密码
-    public static String password = "cao19960528";
-
-    // 图片本地备份地址
-    public static String ImgBackupPath = "/sda2/XiaoMiFen";
-
-    public static void main(String[] args) throws Exception, IOException, UnknownHostException, SmbException {
-
+    public static void main(String[] args) throws Exception {
         System.out.println("请输入你要操作的功能序号，并以回车结束：");
         System.out.println("1.定时拍摄照片；");
         System.out.println("2.合成视频。");
         char input = (char) System.in.read();
         if (input == '1') {
             //samba服务器上的文件
-            UniAddress ua = UniAddress.getByName(host);
-            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(host, username, password);
+            UniAddress ua = UniAddress.getByName(Constants.SAMBA_SERVER_HOST);
+            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(Constants.SAMBA_SERVER_HOST, Constants.SAMBA_USERNAME, Constants.SAMBA_PASSWORD);
             SmbSession.logon(ua, auth);
             Runnable runnable = new Runnable() {
                 @Override
@@ -79,7 +52,7 @@ public class Main {
                     String strSql;
 
                     // 拼接拍摄命令
-                    String ShootingCommand = "raspistill -t " + ShootingDelay + " -o " + FileName + "." + FileExtensions;
+                    String ShootingCommand = "raspistill -t " + Constants.SHOOTING_DELAY + " -o " + FileName + "." + FileExtensions;
                     System.out.println(ShootingCommand);
                     Helper.exeCmd(ShootingCommand);
 
@@ -104,9 +77,9 @@ public class Main {
                     }
 
                     System.out.println("开始备份");
-                    if (IsBackup) {
+                    if (Constants.IS_BACKUP_SAMBA) {
                         try {
-                            BackupPath = "smb://" + host + ImgBackupPath + "/" + Helper.getTime("yyyy") + "/" + Helper.getTime("MM") + "/" + Helper.getTime("dd") + "/" + new File(NewImgAllPath).getName();
+                            BackupPath = "smb://" + Constants.SAMBA_SERVER_HOST + Constants.SAMBA_IMG_BACKUP_PATH + "/" + Helper.getTime("yyyy") + "/" + Helper.getTime("MM") + "/" + Helper.getTime("dd") + "/" + new File(NewImgAllPath).getName();
                             FileTransfer.uploadFileToSamba(BackupPath, auth, NewImgAllPath);
                             BackupStatus = 1;
                         } catch (Exception ex) {
@@ -117,7 +90,7 @@ public class Main {
                         System.out.println("跳过备份");
 
                     System.out.println("开始上传");
-                    if (IsUpload) {
+                    if (Constants.IS_UPLOAD_SMMS) {
                         // 上传并返回 Json
                         strJson = HttpUploadFile.formUpload(NewImgAllPath);
                         System.out.println(strJson);
@@ -161,7 +134,7 @@ public class Main {
             };
             ScheduledExecutorService service = Executors
                     .newSingleThreadScheduledExecutor();
-            service.scheduleAtFixedRate(runnable, 1, UploadInterval, TimeUnit.SECONDS);
+            service.scheduleAtFixedRate(runnable, 1, Constants.SMMS_UPLOAD_INTERVAL, TimeUnit.SECONDS);
 
         } else if (input == '2') {
             String imgPath = "D:\\XiaoMiFen\\2018\\12\\aa";
@@ -171,10 +144,10 @@ public class Main {
                 if (files[i].isDirectory()) {
                     System.out.println(files[i]);
                     VideoHelper.CompositeVideo(files[i].toString());
+                    HttpHelper.SendWeChatMessage("视频已经合成好啦！","`"+files[i]+"` 已经拼接完成。");
                 }
             }
             // VideoHelper.CompositeVideo(imgPath + "\\07");
         }
-
     }
 }
